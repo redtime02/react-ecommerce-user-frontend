@@ -1,22 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const cartState = useSelector((state) => state?.auth?.cartProducts);
+  // useEffect(() => {
+  //   let sum = 0;
+  //   for (let index = 0; index < cartState?.length; index++) {
+  //     sum += (Number(cartState[index].quantity))
+  //   }
+  // }, [cartState])
   return (
     <>
       <header className="header-top-strip py-3">
         <div className="container-xxl">
           <div className="row">
             <div className="col-6">
-              <p className="text-white mb-0">Free Shipping</p>
+              <p className="text-white mb-0">Cái Khế, Ninh Kiều, Cần Thơ</p>
             </div>
             <div className="col-6">
               <p className="text-end text-white mb-0">
-                Hotline:{" "}
-                <a className="text-white" href="tel:+84 1222222222">
-                  +84 1222222222
-                </a>
+                {/* Hotline:{" "} */}
+                <a className="text-white" href="tel:+84 1222222222"></a>
               </p>
             </div>
           </div>
@@ -80,7 +87,9 @@ const Header = () => {
                   >
                     <img src="images/cart.svg" alt="Giỏ hàng" />
                     <div className="d-flex flex-column">
-                      <span className="badge bg-white text-dark">0</span>
+                      <span className="badge bg-white text-dark">
+                        {cartState?.length ? cartState?.length : 0}
+                      </span>
                     </div>
                   </Link>
                 </div>

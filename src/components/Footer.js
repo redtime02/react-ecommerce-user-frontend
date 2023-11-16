@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <>
       <footer className="py-4">
-        <div className="container">
+        {/* <div className="container">
           <div className="row align-items-center">
             <div className="col-5">
               <div className="footer-top-data d-flex gap-30 align-items-center">
@@ -30,7 +30,7 @@ const Footer = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </footer>
       <footer className="py-3">
         <div className="container-xxl">

@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import ReactStars from "react-rating-stars-component";
 import ProductCard from "../components/ProductCard";
 import Color from "../components/Color";
 import Container from "../components/Container";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../features/product/productSlice";
 
 const OurStore = () => {
   const [grid, setGrid] = useState(0);
+  const productState = useSelector((state) => state.product.product);
+  console.log(productState);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    getProducts();
+  }, []);
+  const getProducts = () => {
+    dispatch(getAllProducts());
+  };
   return (
     <>
       <Meta title={"Trang sản phẩm"} />
@@ -75,11 +86,11 @@ const OurStore = () => {
                     <label htmlFor="floatingInput2">Đến</label>
                   </div>
                 </div>
-                <h5 className="sub-title">Màu Sắc</h5>
+                {/* <h5 className="sub-title">Màu Sắc</h5>
                 <div>
                   <Color />
-                </div>
-                <h5 className="sub-title">Kích Cỡ</h5>
+                </div> */}
+                {/* <h5 className="sub-title">Kích Cỡ</h5>
                 <div className="form-check">
                   <input
                     className="form-check-input"
@@ -90,8 +101,8 @@ const OurStore = () => {
                   <label className="form-check-label" htmlFor="color-1">
                     S (2)
                   </label>
-                </div>
-                <div className="form-check">
+                </div> */}
+                {/* <div className="form-check">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -101,10 +112,10 @@ const OurStore = () => {
                   <label className="form-check-label" htmlFor="color-2">
                     M (2)
                   </label>
-                </div>
+                </div> */}
               </div>
             </div>
-            <div className="filter-card mb-3">
+            {/* <div className="filter-card mb-3">
               <h3 className="filter-title">Sản Phẩm</h3>
               <div>
                 <div className="product-tags d-flex flex-wrap align-items-center gap-10">
@@ -167,7 +178,7 @@ const OurStore = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="col-9">
             <div className="filter-sort-grid mb-4">
@@ -233,7 +244,7 @@ const OurStore = () => {
             </div>
             <div className="products-list pb-5">
               <div className="d-flex gap-10 flex-wrap">
-                <ProductCard grid={grid} />
+                <ProductCard data={productState} grid={grid} />
               </div>
             </div>
           </div>
