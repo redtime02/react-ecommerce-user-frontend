@@ -10,7 +10,11 @@ import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart } from "react-icons/ai";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { getAProduct } from "../features/product/productSlice";
+import {
+  addRating,
+  getAProduct,
+  getAllProducts,
+} from "../features/product/productSlice";
 import { toast } from "react-toastify";
 import { addProdToCart, getUserCart } from "../features/user/userSlice";
 
@@ -23,12 +27,14 @@ const SingleProduct = () => {
   // console.log(location);
   const getProductId = location.pathname.split("/")[2];
   const dispatch = useDispatch();
-  const productState = useSelector((state) => state.product.singleProduct);
-  const cartState = useSelector((state) => state.auth.cartProducts);
+  const productState = useSelector((state) => state?.product?.singleProduct);
+  const productsState = useSelector((state) => state?.product?.product);
+  const cartState = useSelector((state) => state?.auth?.cartProducts);
   // console.log(productState);
   useEffect(() => {
     dispatch(getAProduct(getProductId));
     dispatch(getUserCart());
+    dispatch(getAllProducts());
   }, []);
   useEffect(() => {
     for (let index = 0; index < cartState?.length; index++) {
@@ -50,7 +56,10 @@ const SingleProduct = () => {
           price: productState?.price,
         })
       );
-      navigate("/cart");
+      setTimeout(() => {
+        navigate("/cart");
+        window.location.reload();
+      }, 2000);
     }
   };
   console.log(typeof parseInt(productState?.totalrating));
@@ -73,10 +82,41 @@ const SingleProduct = () => {
     document.execCommand("copy");
     textField.remove();
   };
+  const [popularProduct, setPopularProduct] = useState([]);
+  useEffect(() => {
+    let data = [];
+    for (let index = 0; index < productsState?.length; index++) {
+      const element = productsState[index];
+      if (element.tags === "popular") {
+        data.push(element);
+      }
+      setPopularProduct(data);
+    }
+  }, [productState]);
+  console.log(popularProduct);
+  const [star, setStar] = useState(null);
+  const [comment, setComment] = useState(null);
+  const addRatingToProduct = () => {
+    if (star === null) {
+      toast.error("Hãy đánh giá sao");
+      return false;
+    } else if (comment === null) {
+      toast.error("Hãy bình luận sản phẩm");
+      return false;
+    } else {
+      dispatch(
+        addRating({ star: star, comment: comment, prodId: getProductId })
+      );
+      setTimeout(() => {
+        dispatch(getAProduct(getProductId));
+      }, 100);
+    }
+    return false;
+  };
   return (
     <>
       <Meta title={"Tên sản phẩm"} />
-      <BreadCrumb title="Tên sản phẩm" />
+      <BreadCrumb title={productState?.title} />
       <Container class1="main-product-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-6">
@@ -103,14 +143,17 @@ const SingleProduct = () => {
               <div className="border-bottom py-3">
                 <p className="price">{productState?.price} VND</p>
                 <div className="d-flex align-items-center gap-10">
-                  <ReactStars
+                  <p className="mt-3">
+                    Đánh giá : {parseInt(productState?.totalrating)} sao
+                  </p>
+                  {/* <ReactStars
                     count={5}
                     size={24}
                     value={parseInt(productState?.totalrating)}
                     edit={false}
                     activeColor="#ffd700"
                   />
-                  <p className="mb-0 t-review">(2 đánh giá)</p>
+                  <p className="mb-0 t-review">(2 đánh giá)</p> */}
                 </div>
                 <a className="review-btn" href="#review">
                   Viết bình luận
@@ -199,7 +242,7 @@ const SingleProduct = () => {
                   </button>
                   {/* <button className="button signup border-0">Mua Ngay</button> */}
                 </div>
-                <div className="d-flex align-items-center gap-15">
+                {/* <div className="d-flex align-items-center gap-15">
                   <div>
                     <a href="">
                       <TbGitCompare className="fs-5 me-2" />
@@ -228,7 +271,7 @@ const SingleProduct = () => {
                   >
                     Copy Product Link
                   </a>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -258,14 +301,16 @@ const SingleProduct = () => {
                 <div>
                   <h4 className="mb-2">Đánh giá của khách hàng</h4>
                   <div className="d-flex align-items-center gap-10">
+                    <p className="mt-3">
+                      {parseInt(productState?.totalrating)}
+                    </p>
                     <ReactStars
                       count={5}
                       size={24}
-                      value={3}
+                      value={parseInt(productState?.totalrating)}
                       edit={false}
                       activeColor="#ffd700"
                     />
-                    <p className="mb-0">Dựa trên 2 đánh giá</p>
                   </div>
                 </div>
                 {orderedProduct && (
@@ -278,45 +323,60 @@ const SingleProduct = () => {
               </div>
               <div className="review-form py-4">
                 <h4>Viết bình luận</h4>
-                <form action="" className="d-flex flex-column gap-15">
-                  <div>
-                    <ReactStars
-                      count={5}
-                      size={24}
-                      value={3}
-                      edit={true}
-                      activeColor="#ffd700"
-                    />
-                  </div>
-                  <div>
-                    <textarea
-                      name=""
-                      id=""
-                      className="w-100 form-control"
-                      cols="30"
-                      rows="4"
-                      placeholder="Bình luận"
-                    ></textarea>
-                  </div>
-                  <div className="d-flex justify-content-end">
-                    <button className="button border-0">Gửi</button>
-                  </div>
-                </form>
+                <div>
+                  <ReactStars
+                    count={5}
+                    size={24}
+                    value={3}
+                    edit={true}
+                    activeColor="#ffd700"
+                    onChange={(e) => {
+                      setStar(e);
+                    }}
+                  />
+                </div>
+                <div>
+                  <textarea
+                    name=""
+                    id=""
+                    className="w-100 form-control"
+                    cols="30"
+                    rows="4"
+                    placeholder="Bình luận"
+                    onChange={(e) => {
+                      setComment(e.target.value);
+                    }}
+                  ></textarea>
+                </div>
+                <div className="d-flex justify-content-end mt-3">
+                  <button
+                    onClick={addRatingToProduct}
+                    className="button border-0"
+                    type="button"
+                  >
+                    Gửi
+                  </button>
+                </div>
               </div>
               <div className="reviews mt-4">
-                <div className="review">
-                  <div className="d-flex gap-10 align-items-center">
-                    <h6 className="mb-0">Tôi tên là</h6>
-                    <ReactStars
-                      count={5}
-                      size={24}
-                      value={3}
-                      edit={false}
-                      activeColor="#ffd700"
-                    />
-                  </div>
-                  <p className="mt-3">Cũng tạm. Có điều giao hàng trễ quá</p>
-                </div>
+                {productState &&
+                  productState?.ratings?.map((item, index) => {
+                    return (
+                      <div key={index} className="review">
+                        <div className="d-flex gap-10 align-items-center">
+                          <h6 className="mb-0">Phan Khôi</h6>
+                          <ReactStars
+                            count={5}
+                            size={24}
+                            value={item?.star}
+                            edit={false}
+                            activeColor="#ffd700"
+                          />
+                        </div>
+                        <p className="mt-3">{item?.comment}</p>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           </div>
@@ -329,7 +389,7 @@ const SingleProduct = () => {
           </div>
         </div>
         <div className="row">
-          <ProductCard />
+          <ProductCard data={popularProduct} />
         </div>
       </Container>
     </>

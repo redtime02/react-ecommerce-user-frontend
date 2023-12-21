@@ -18,6 +18,7 @@ import watch from "../images/watch.jpg";
 import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 import { addToWishlist } from "../features/product/productSlice";
+import tab from "../images/tab.jpg";
 
 const Home = () => {
   const blogState = useSelector((state) => state?.blog?.blog);
@@ -41,23 +42,8 @@ const Home = () => {
   };
   return (
     <>
-      {/* <Container class1="home-wrapper-1 py-5">
+      <Container class1="home-wrapper-1 py-5">
         <div className="row">
-          <div className="col-6">
-            <div className="main-banner position-relative">
-              <img
-                src="images/main-banner-1.jpg"
-                className="img-fluid rounded-3"
-                alt="Main Banner"
-              />
-              <div className="main-banner-content position-absolute">
-                <h4>GIẢM GIÁ KHỦNG</h4>
-                <h5>Iphone 14 Pro</h5>
-                <p>Từ 30 đến 40 %</p>
-                <Link className="button">MUA NGAY</Link>
-              </div>
-            </div>
-          </div>
           <div className="col-6">
             <div className="d-flex flex-wrap gap-10 justify-content-between align-items-center">
               <div className="small-banner position-relative">
@@ -110,8 +96,26 @@ const Home = () => {
               </div>
             </div>
           </div>
+          <div className="col-6">
+            <div className="main-banner position-relative">
+              <img
+                src="images/tab3.jpg"
+                className="img-fluid rounded-3"
+                alt="Main Banner"
+                style={{ height: "550px", width: "830px" }}
+              />
+              <div className="main-banner-content position-absolute">
+                <h4>GIẢM GIÁ KHỦNG</h4>
+                <h5>Iphone 15 Pro Max</h5>
+                <p>Từ 30 đến 40 %</p>
+                <Link className="button" to="/product">
+                  MUA NGAY
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
-      </Container> */}
+      </Container>
       <Container class1="home-wrapper-2 py-5">
         <div className="container-xxl">
           <div className="row">
@@ -133,7 +137,7 @@ const Home = () => {
           </div>
         </div>
       </Container>
-      <Container class1="home-wrapper-2 py-5">
+      {/* <Container class1="home-wrapper-2 py-5">
         <div className="row">
           <div className="col-12">
             <div className="categories d-flex justify-content-between flex-wrap align-items-center">
@@ -196,7 +200,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </Container>
+      </Container> */}
       <Container class1="featured-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
@@ -226,7 +230,7 @@ const Home = () => {
                           width={160}
                         />
                         <img
-                          src={watch}
+                          src={tab}
                           className="img-fluid mx-auto"
                           alt="Product Image"
                           width={160}
@@ -246,9 +250,9 @@ const Home = () => {
                       </div>
                       <div className="action-bar position-absolute">
                         <div className="d-flex flex-column gap-15">
-                          <button className="border-0 transparent">
+                          {/* <button className="border-0 transparent">
                             <img src={prodcompare} alt="Compare" />
-                          </button>
+                          </button> */}
                           <button className="border-0 transparent">
                             <img
                               onClick={() => navigate("/product/" + item?._id)}
@@ -256,9 +260,9 @@ const Home = () => {
                               alt="View"
                             />
                           </button>
-                          <button className="border-0 transparent">
+                          {/* <button className="border-0 transparent">
                             <img src={addcart} alt="Add Cart" />
-                          </button>
+                          </button> */}
                         </div>
                       </div>
                     </div>
@@ -268,7 +272,7 @@ const Home = () => {
             })}
         </div>
       </Container>
-      <Container class1="famous-wrapper py-5 home-wrapper-2">
+      {/* <Container class1="famous-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-3">
             <div className="famous-card position-relative">
@@ -311,7 +315,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </Container>
+      </Container> */}
       <Container class1="special-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
@@ -331,6 +335,7 @@ const Home = () => {
                       price={item?.price}
                       sold={item?.sold}
                       quantity={item?.quantity}
+                      img={item?.images[0]?.url}
                     />
                   );
                 }
@@ -373,7 +378,7 @@ const Home = () => {
                             width={160}
                           />
                           <img
-                            src={watch}
+                            src={tab}
                             className="img-fluid mx-auto"
                             alt="Product Image"
                             width={160}
@@ -393,9 +398,9 @@ const Home = () => {
                         </div>
                         <div className="action-bar position-absolute">
                           <div className="d-flex flex-column gap-15">
-                            <button className="border-0 transparent">
+                            {/* <button className="border-0 transparent">
                               <img src={prodcompare} alt="Compare" />
-                            </button>
+                            </button> */}
                             <button className="border-0 transparent">
                               <img
                                 src={view}
@@ -405,9 +410,9 @@ const Home = () => {
                                 alt="View"
                               />
                             </button>
-                            <button className="border-0 transparent">
+                            {/* <button className="border-0 transparent">
                               <img src={addcart} alt="Add Cart" />
-                            </button>
+                            </button> */}
                           </div>
                         </div>
                       </div>
@@ -418,7 +423,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <Container class1="marque-wrapper py-5">
+      {/* <Container class1="marque-wrapper py-5">
         <div className="row">
           <div className="col-12">
             <div className="marquee-inner-wrapper card-wrapper">
@@ -451,7 +456,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </Container>
+      </Container> */}
       <Container class1="blog-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
@@ -469,9 +474,7 @@ const Home = () => {
                       title={item?.title}
                       description={item?.description}
                       image={item?.images[0]?.url}
-                      date={moment(item?.createdAt).format(
-                        "MMMM Do YYYY, h:mm:ss a"
-                      )}
+                      date={moment(item?.createdAt).format("DD/MM/YYYY")}
                     />
                   </div>
                 );

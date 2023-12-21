@@ -1,17 +1,45 @@
-import React, { useEffect } from "react";
-import { NavLink, Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
+import { Typeahead } from "react-bootstrap-typeahead";
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import { getAProduct } from "../features/product/productSlice";
+import { getUserCart } from "../features/user/userSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
   const cartState = useSelector((state) => state?.auth?.cartProducts);
+  const authState = useSelector((state) => state?.auth);
+  const productState = useSelector((state) => state?.product?.product);
+  const [productOpt, setProductOpt] = useState([]);
+  const [paginate, setPaginate] = useState(true);
+  const navigate = useNavigate();
   // useEffect(() => {
   //   let sum = 0;
   //   for (let index = 0; index < cartState?.length; index++) {
   //     sum += (Number(cartState[index].quantity))
   //   }
   // }, [cartState])
+
+  useEffect(() => {
+    dispatch(getUserCart());
+  }, []);
+
+  useEffect(() => {
+    let data = [];
+    for (let index = 0; index < productState?.length; index++) {
+      const element = productState[index];
+      data.push({ id: index, prod: element?._id, name: element?.title });
+    }
+    setProductOpt(data);
+  }, [productState]);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
   return (
     <>
       <header className="header-top-strip py-3">
@@ -39,12 +67,18 @@ const Header = () => {
             </div>
             <div className="col-5">
               <div className="input-group mb-3">
-                <input
-                  type="text"
-                  className="form-control py-2"
-                  placeholder="Nhập tên sản phẩm ..."
-                  aria-label="Nhập tên sản phẩm ..."
-                  aria-describedby="basic-addon2"
+                <Typeahead
+                  id="pagination-example"
+                  onPaginate={() => console.log("Results paginated")}
+                  onChange={(selected) => {
+                    navigate(`/product/${selected[0]?.prod}`);
+                    dispatch(getAProduct(selected[0]?.prod));
+                  }}
+                  options={productOpt}
+                  paginate={paginate}
+                  labelKey={"name"}
+                  minLength={2}
+                  placeholder="Nhập tên sản phẩm..."
                 />
                 <span className="input-group-text p-3" id="basic-addon2">
                   <BsSearch className="fs-6" />
@@ -54,13 +88,13 @@ const Header = () => {
             <div className="col-5">
               <div className="header-upper-links d-flex align-items-center justify-content-between">
                 <div>
-                  <Link
+                  {/* <Link
                     to="/compare-product"
                     className="d-flex align-items-center gap-10 text-white"
                   >
                     <img src="images/compare.svg" alt="So sánh" />
                     <p className="mb-0">So sánh</p>
-                  </Link>
+                  </Link> */}
                 </div>
                 <div>
                   <Link
@@ -73,11 +107,15 @@ const Header = () => {
                 </div>
                 <div>
                   <Link
-                    to="/login"
+                    to={authState?.user === null ? "/login" : "/my-profile"}
                     className="d-flex align-items-center gap-10 text-white"
                   >
                     <img src="images/user.svg" alt="Tài khoản" />
-                    <p className="mb-0">Đăng nhập</p>
+                    {authState?.user === null ? (
+                      <p className="mb-0">Đăng nhập</p>
+                    ) : (
+                      <p className="mb-0">{authState?.user?.lastname}</p>
+                    )}
                   </Link>
                 </div>
                 <div>
@@ -139,12 +177,21 @@ const Header = () => {
                     </ul>
                   </div>
                 </div>
-                <div className="menu-links">
+                <div className="menu-links d-flex flex-row">
                   <div className="d-flex align-items-center gap-15">
                     <NavLink to="/">TRANG CHỦ</NavLink>
                     <NavLink to="/product">SẢN PHẨM</NavLink>
+                    <NavLink to="/my-orders">ĐƠN HÀNG</NavLink>
                     <NavLink to="/blogs">TIN TỨC</NavLink>
                     <NavLink to="/contact">LIÊN HỆ</NavLink>
+                    <button
+                      onClick={handleLogout}
+                      className="border border-0 bg-transparent text-white float-end"
+                      type="button"
+                      style={{ fontSize: "14px" }}
+                    >
+                      ĐĂNG XUẤT
+                    </button>
                   </div>
                 </div>
               </div>

@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const signUpSchema = yup.object({
   firstname: yup.string().required("Vui lòng nhập họ"),
@@ -21,7 +22,9 @@ const signUpSchema = yup.object({
 });
 
 const SignUp = () => {
+  const authState = useSelector((state) => state?.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       firstname: "",
@@ -33,8 +36,17 @@ const SignUp = () => {
     validationSchema: signUpSchema,
     onSubmit: (values) => {
       dispatch(registerUser(values));
+      if (authState?.createdUser !== null && authState?.isError === false) {
+        navigate("/login");
+      }
     },
   });
+
+  // useEffect(() => {
+  // if (authState?.createdUser !== null) {
+  //   navigate("/login");
+  // }
+  // }, [authState]);
 
   return (
     <>
@@ -44,7 +56,7 @@ const SignUp = () => {
         <div className="row">
           <div className="col-12">
             <div className="auth-card">
-              <h3 className="text-center mb-3">Tạo Tài Khoản</h3>
+              <h3 className="text-center mb-3">Đăng Ký</h3>
               <form
                 action=""
                 onSubmit={formik.handleSubmit}

@@ -19,9 +19,9 @@ const Cart = () => {
   // console.log(totalAmount);
   // console.log(prodUpdateDetail);
   const userCartState = useSelector((state) => state.auth.cartProducts);
-  useEffect(() => {
-    dispatch(getUserCart());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getUserCart());
+  // }, []);
   useEffect(() => {
     if (prodUpdateDetail !== null) {
       dispatch(
@@ -99,15 +99,11 @@ const Cart = () => {
                         <input
                           className="form-control"
                           type="number"
-                          name=""
+                          name={"quantity" + item?._id}
                           min={1}
                           max={10}
-                          id=""
-                          value={
-                            prodUpdateDetail?.quantity
-                              ? prodUpdateDetail?.quantity
-                              : item?.quantity
-                          }
+                          id={"cart" + item?._id}
+                          value={item?.quantity}
                           onChange={(e) => {
                             setProdUpdateDetail({
                               cartItemId: item?._id,

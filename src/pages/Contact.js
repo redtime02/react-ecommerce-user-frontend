@@ -134,7 +134,7 @@ const Contact = () => {
                     </div>
                   </div>
                   <div>
-                    <button className="button border-0">Lưu</button>
+                    <button className="button border-0">Gửi</button>
                   </div>
                 </form>
               </div>
